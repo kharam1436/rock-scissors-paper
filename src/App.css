@@ -4,10 +4,25 @@
 }
 
 .box {
-  border: 1px solid black;
+  border: 4px solid black;
   width: 500px;
+  height: 550px;
+  margin: 2rem;
+}
+
+.box.win {
+  border: 4px solid green;
+}
+
+.box.lose {
+  border: 4px solid red;
 }
 
 .item-img {
   width: 400px;
+}
+
+FontAwesomeIcon {
+  font-size: 3rem;
+  margin: 1rem;
 }
