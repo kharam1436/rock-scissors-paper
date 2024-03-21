@@ -1,9 +1,10 @@
-import "./App.css";
-import { Box } from "./components/Box";
-import { useState } from "react";
+import React, { Component } from "react";
 import scissorImg from "./images/scissors-hand.png";
 import paperImg from "./images/paper-hand.png";
 import rockImg from "./images/rock-hand.png";
+
+import "./App.css";
+import { Box } from "./components/Box";
 
 const choice = {
   scissors: { name: "scissors", img: scissorImg },
@@ -11,12 +12,17 @@ const choice = {
   paper: { name: "paper", img: paperImg },
 };
 
-function App() {
-  const [userSelect, setUserSelect] = useState(choice["paper"]);
-  const [computerChoice, setComputerChoice] = useState(choice["paper"]);
-  const [result, setResult] = useState({});
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userSelect: choice["paper"],
+      computerChoice: choice["paper"],
+      result: {},
+    };
+  }
 
-  const judgement = (user, computer) => {
+  judgement(user, computer) {
     console.log(user, computer);
     if (user === computer) return { user: "tie", computer: "tie" };
     if (
@@ -28,35 +34,46 @@ function App() {
     } else {
       return { user: "lose", computer: "win" };
     }
-  };
+  }
 
-  const randomChoice = () => {
+  randomChoice() {
     const select = Object.keys(choice);
     const random = Math.floor(Math.random() * select.length);
     return choice[select[random]];
-  };
+  }
 
-  const play = (userChoice) => {
+  play(userChoice) {
     const user = choice[userChoice];
-    const computer = randomChoice();
-    setUserSelect(user);
-    setComputerChoice(computer);
-    setResult(judgement(user.name, computer.name));
-  };
+    const computer = this.randomChoice();
 
-  return (
-    <>
-      <div className="main">
-        <Box title="You" item={userSelect} result={result.user} />
-        <Box title="Computer" item={computerChoice} result={result.computer} />
+    this.setState({
+      userSelect: user,
+      computerChoice: computer,
+      result: this.judgement(user.name, computer.name),
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <div className="main">
+          <Box
+            title="You"
+            item={this.state.userSelect}
+            result={this.state.result.user}
+          />
+          <Box
+            title="Computer"
+            item={this.state.computerChoice}
+            result={this.state.result.computer}
+          />
+        </div>
+        <div className="main">
+          <button onClick={() => this.play("scissors")}>가위</button>
+          <button onClick={() => this.play("rock")}>바위</button>
+          <button onClick={() => this.play("paper")}>보</button>
+        </div>
       </div>
-      <div className="main">
-        <button onClick={() => play("scissors")}>가위</button>
-        <button onClick={() => play("rock")}>바위</button>
-        <button onClick={() => play("paper")}>보</button>
-      </div>
-    </>
-  );
+    );
+  }
 }
-
-export default App;
